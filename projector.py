@@ -15,7 +15,7 @@ def make_projector(cities: list[City], window_settings: WindowSettings)-> Callab
 
     # return a closure so that the above computations only need to run once,
     # and then only the closure can be called with those results in the draw loop
-    def project(lat: float, lng: float):
+    def project(lat: float, lng: float)-> tuple[float, float]:
         # normalize lat and lng to a [0,1] interval
         nx = (lng - min_lng) / span_lng
         ny = (lat - min_lat) / span_lat
