@@ -6,19 +6,13 @@ ga = Ga(cities_provider)
 
 population = ga.create_initial_population()
 
-print(population[0])
-print(population[1])
-ga.crossover(population[0], population[1])
+print("====== starting population =======")
+for individual in population:
+    print("individual: ", individual)
+    print("cost: ", ga.calculate_cost(individual))
+    print("fitness: ", ga.fitness(individual))
 
-# for individual in population:
-#     print("individual: ", individual)
-#     print("cost: ", ga.calculate_cost(individual))
-#     print("fitness: ", ga.fitness(individual))
-#
-# print("------------ new population ---------------")
-#
-# new_population = ga.selection(population)
-# for individual in new_population:
-#     print("individual: ", individual)
-#     print("cost: ", ga.calculate_cost(individual))
-#     print("fitness: ", ga.fitness(individual))
+result = ga.run()
+print("====== result population =======")
+print("individual: ", result)
+print("cost: ", ga.calculate_cost(result))

@@ -1,11 +1,16 @@
 import random
+from math import floor
+
 from cities_provider import CitiesProvider
 
 class Ga:
-    POPULATION_SIZE = 10
-    MAX_ITERATIONS = 100
+    POPULATION_SIZE = 50
+    MAX_SAME_ITERATIONS = 10
+    GENERATION_CAP = 1000
 
     TOURNAMENT_SIZE = 3
+    MUTATION_RATE = 0.2
+    ELITISM_RATE = 0.2
 
     def __init__(self, cities_provider: CitiesProvider):
         self.cities_provider = cities_provider
@@ -90,3 +95,43 @@ class Ga:
         start, end = sorted(random.sample(range(len(individual)), 2))
         individual[start:end+1] = list(reversed(individual[start:end+1]))
         return individual
+
+    # returns list of individuals from the previous population to keep in the next
+    def elitism(self, population: list[list[int]]) -> list[list[int]]:
+        elitism_count = max(1, floor(len(population) * self.ELITISM_RATE))
+        fitness_list = sorted(population, key=lambda individual: self.fitness(individual), reverse=True)
+        return fitness_list[:elitism_count]
+
+    def run(self) -> list[int]:
+        population = self.create_initial_population()
+
+        generation = 0
+        same_iter_count = 0
+        prev_best_cost = float("inf")
+        while same_iter_count < self.MAX_SAME_ITERATIONS and generation < self.GENERATION_CAP:
+            tournament_winners = self.selection(population)
+
+            new_population = []
+            for parent1, parent2 in zip(tournament_winners[::2], tournament_winners[1::2]):
+                # edge recombination produces n/2 children, crossover each pair twice to get to n children
+                new_population.extend((self.crossover(parent1, parent2), self.crossover(parent2, parent1)))
+
+            for i in range(len(new_population)):
+                if random.random() < self.MUTATION_RATE:
+                    new_population[i] = self.mutate(new_population[i])
+
+            elitism_individuals = self.elitism(population)
+            new_population[:len(elitism_individuals)] = elitism_individuals
+
+            population = new_population
+
+            curr_best_cost = min([self.calculate_cost(individual) for individual in population])
+            if curr_best_cost < prev_best_cost:
+                prev_best_cost = curr_best_cost
+                same_iter_count = 0
+            else:
+                same_iter_count += 1
+
+            generation += 1
+
+        return max(population, key=lambda individual: self.fitness(individual))
