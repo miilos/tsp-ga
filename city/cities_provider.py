@@ -1,4 +1,4 @@
-from city import City
+from city.city import City
 
 class CitiesProvider:
     CITIES_LIST = (
@@ -10,6 +10,7 @@ class CitiesProvider:
         City(5, "Amsterdam", 52.3676, 4.9041),
         City(6, "Vienna", 48.21, 16.37),
         City(7, "London", 51.51, -0.13),
+        # City(7, "Sydney", 33.8688, 151.2093)
     )
 
     def get_cities(self):

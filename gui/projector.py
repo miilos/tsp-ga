@@ -1,5 +1,5 @@
 from collections.abc import Callable
-from city import City
+from city.city import City
 from window_settings import WindowSettings
 
 

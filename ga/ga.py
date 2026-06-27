@@ -1,7 +1,6 @@
 import random
 from math import floor
-
-from cities_provider import CitiesProvider
+from city.cities_provider import CitiesProvider
 
 class Ga:
     POPULATION_SIZE = 50

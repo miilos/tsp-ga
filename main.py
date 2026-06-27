@@ -1,8 +1,8 @@
 import tkinter as tk
 import customtkinter as ctk
-from cities_provider import CitiesProvider
-from projector import make_projector
-from window_settings import WindowSettings
+from city.cities_provider import CitiesProvider
+from gui.projector import make_projector
+from gui.window_settings import WindowSettings
 
 window_settings = WindowSettings("TSP",900,650,40, "System")
 

@@ -1,4 +1,4 @@
 .venv
 .idea
 __pycache__
-ga_test.py
+ga/ga_test.py
