@@ -1,8 +1,13 @@
 import random
+import time
 from math import floor
 from city.cities_provider import CitiesProvider
+from ga.generation_info import GenerationInfo
+from observer.publisher_interface import PublisherInterface
+from observer.subscriber_interface import SubscriberInterface
 
-class Ga:
+
+class Ga(PublisherInterface):
     POPULATION_SIZE = 50
     MAX_SAME_ITERATIONS = 10
     GENERATION_CAP = 1000
@@ -11,8 +16,10 @@ class Ga:
     MUTATION_RATE = 0.2
     ELITISM_RATE = 0.2
 
-    def __init__(self, cities_provider: CitiesProvider):
+    def __init__(self, cities_provider: CitiesProvider, generation_delay: float = 0.0):
         self.cities_provider = cities_provider
+        self.subscribers = []
+        self.generation_delay = generation_delay
 
     def create_initial_population(self)-> list[list[int]]:
         cities = self.cities_provider.get_cities()
@@ -124,13 +131,35 @@ class Ga:
 
             population = new_population
 
-            curr_best_cost = min([self.calculate_cost(individual) for individual in population])
+            curr_best_individual = sorted(population, key=lambda individual: self.fitness(individual), reverse=True)[0]
+            curr_best_cost = self.calculate_cost(curr_best_individual)
+            curr_best_fitness = self.fitness(curr_best_individual)
+
             if curr_best_cost < prev_best_cost:
                 prev_best_cost = curr_best_cost
                 same_iter_count = 0
             else:
                 same_iter_count += 1
 
+            message = GenerationInfo(
+                population,
+                curr_best_individual,
+                curr_best_cost,
+                curr_best_fitness,
+                generation,
+            )
+            self.publish(message)
+
+            if self.generation_delay:
+                time.sleep(self.generation_delay)
+
             generation += 1
 
         return max(population, key=lambda individual: self.fitness(individual))
+
+    def subscribe(self, subscriber: SubscriberInterface) -> None:
+        self.subscribers.append(subscriber)
+
+    def publish(self, message: GenerationInfo) -> None:
+        for subscriber in self.subscribers:
+            subscriber.update(message)

@@ -1,6 +1,6 @@
 from collections.abc import Callable
 from city.city import City
-from window_settings import WindowSettings
+from gui.window_settings import WindowSettings
 
 
 def make_projector(cities: list[City], window_settings: WindowSettings)-> Callable:
@@ -22,7 +22,7 @@ def make_projector(cities: list[City], window_settings: WindowSettings)-> Callab
 
         # map the normalized coordinates onto the canvas
         x = window_settings.margin + nx * (window_settings.width - 2 * window_settings.margin)
-        y = window_settings.margin + (1 - ny) * (window_settings.height - 2 * window_settings.margin)
+        y = window_settings.margin + (1 - ny) * (window_settings.map_height - 2 * window_settings.margin)
         return x, y
 
     return project

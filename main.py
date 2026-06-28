@@ -1,34 +1,16 @@
-import tkinter as tk
-import customtkinter as ctk
+import threading
+
 from city.cities_provider import CitiesProvider
-from gui.projector import make_projector
+from ga.ga import Ga
+from gui.gui_handler import GuiHandler
 from gui.window_settings import WindowSettings
 
-window_settings = WindowSettings("TSP",900,650,40, "System")
+provider = CitiesProvider()
+window_settings = WindowSettings("TSP", 900, 650, 120, 40, "System")
 
-ctk.set_appearance_mode(window_settings.appearance_mode)
+gui = GuiHandler(provider, window_settings)
 
-app = ctk.CTk()
-app.geometry(f"{window_settings.width}x{window_settings.height}")
-app.title(window_settings.title)
+ga = Ga(provider, generation_delay=0.3)
+ga.subscribe(gui)
 
-canvas = tk.Canvas(
-    app,
-    width=window_settings.width,
-    height=window_settings.height,
-    bg="#628717"
-)
-canvas.pack()
-
-cities_provider = CitiesProvider()
-cities = cities_provider.get_cities()
-
-project = make_projector(cities, window_settings)
-
-for city in cities:
-    x, y = project(city.lat, city.lng)
-    r = 5
-    canvas.create_oval(x - r, y - r, x + r, y + r, fill="#000", outline="")
-    canvas.create_text(x, y - 14, text=city.name, fill="#000")
-
-app.mainloop()
+gui.create_window(on_ready=lambda: threading.Thread(target=ga.run, daemon=True).start())
