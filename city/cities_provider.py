@@ -10,7 +10,17 @@ class CitiesProvider:
         City(5, "Amsterdam", 52.3676, 4.9041),
         City(6, "Vienna", 48.21, 16.37),
         City(7, "London", 51.51, -0.13),
-        # City(7, "Sydney", 33.8688, 151.2093)
+        City(8, "Brussels", 50.8503, 4.3517),
+        City(9, "Nice", 43.7034, 7.2663),
+        City(10, "Athens", 37.9838, 23.7275),
+        City(11, "Lisbon", 38.725278, -9.15000),
+        City(12, "Oslo", 59.9122, 10.7313),
+        City(13, "Ljubljana", 46.0569, 14.5058),
+        City(14, "Bern", 46.9480, 7.4474),
+        City(15, "Dublin", 53.350140, -6.266155),
+        City(16, "Reykjavik", 64.1470, -21.9408),
+        City(17, "Copenhagen", 55.6761, 12.5683),
+        # City(18, "Sydney", 33.8688, 151.2093)
     )
 
     def get_cities(self):

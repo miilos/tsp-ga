@@ -2,3 +2,4 @@
 .idea
 __pycache__
 ga/ga_test.py
+run_log.txt
